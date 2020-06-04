@@ -1,0 +1,153 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="1.0.0" author="greg.adler">
+        <createTable tableName="users">
+
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="avatar" type="VARCHAR(200)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0.1" author="greg.adler">
+        <createTable tableName="roles">
+
+            <column name="name" type="VARCHAR(30)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0.2" author="greg.adler">
+        <createTable tableName="user_roles">
+            <column name="user_email" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_name" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0.3" author="greg.adler">
+        <createTable tableName="posts">
+            <column name="post_id" type="VARCHAR(100)">
+                <constraints primaryKey="true" nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0.4" author="greg.adler">
+        <createTable tableName="user_favorites">
+            <column name="user_email" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="post" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0.5" author="greg.adler">
+        <addForeignKeyConstraint baseTableName="user_roles"
+                                 baseColumnNames="user_email"
+                                 constraintName="fk_user_roles_users"
+                                 referencedTableName="users"
+                                 referencedColumnNames="email"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"/>
+    </changeSet>
+
+    <changeSet id="1.0.6" author="greg.adler">
+        <addForeignKeyConstraint baseTableName="user_roles"
+                                 baseColumnNames="role_name"
+                                 constraintName="fk_user_roles_roles"
+                                 referencedTableName="roles"
+                                 referencedColumnNames="name"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"/>
+    </changeSet>
+
+    <changeSet id="1.0.7" author="greg.adler">
+        <addForeignKeyConstraint baseTableName="user_favorites"
+                                 baseColumnNames="user_email"
+                                 constraintName="fk_user_favorites_users"
+                                 referencedTableName="users"
+                                 referencedColumnNames="email"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"/>
+    </changeSet>
+
+    <changeSet id="1.0.8" author="greg.adler">
+        <addForeignKeyConstraint baseTableName="user_favorites"
+                                 baseColumnNames="post"
+                                 constraintName="fk_user_favorites_posts"
+                                 referencedTableName="posts"
+                                 referencedColumnNames="post_id"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"/>
+    </changeSet>
+
+    <changeSet id="1.0.9" author="greg.adler">
+        <insert tableName="roles">
+            <column name="name" value="ROLE_USER"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="1.1.0" author="greg.adler">
+        <insert tableName="roles">
+            <column name="name" value="ROLE_MODERATOR"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="1.1.1" author="greg.adler">
+        <insert tableName="roles">
+            <column name="name" value="ROLE_ADMIN"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="1.1.2" author="greg.adler">
+        <createTable tableName="user_token">
+            <column name="user_email" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="current_token" type="VARCHAR(1000)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
