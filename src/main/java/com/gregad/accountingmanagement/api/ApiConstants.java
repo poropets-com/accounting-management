@@ -8,4 +8,5 @@ public interface ApiConstants {
     String BLOCK="/block";
     String FAVORITE="/favorite";
     String FAVORITES="/favorites";
+    String VALIDATION="/validation";
 }

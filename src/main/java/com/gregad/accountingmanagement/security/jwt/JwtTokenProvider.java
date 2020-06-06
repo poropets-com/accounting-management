@@ -106,7 +106,7 @@ public class JwtTokenProvider {
                 getBody().get("roles");
         return createToken(getUserEmail(token),roles);
     }
-    public void updateHeaderRequest(HttpServletResponse response, String newToken){
+    public void updateHeaderResponse(HttpServletResponse response, String newToken){
         response.addHeader(HEADER,PREFIX+newToken);
     }
 }

@@ -42,6 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 authorizeRequests().
                 antMatchers(HttpMethod.POST,PREFIX).permitAll().
                 antMatchers(HttpMethod.POST,PREFIX+LOGIN).permitAll().
+                antMatchers(HttpMethod.GET,PREFIX+"/**"+VALIDATION).permitAll().
                 
                 antMatchers(HttpMethod.GET,PREFIX+"/**"+INFO).hasRole(USER).
                 antMatchers(HttpMethod.PUT,PREFIX+"/*").hasRole(USER).
