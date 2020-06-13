@@ -4,6 +4,7 @@ import com.gregad.accountingmanagement.dto.requestDto.EditProfileRequestDto;
 import com.gregad.accountingmanagement.dto.requestDto.RegisterUserRequestDto;
 import com.gregad.accountingmanagement.dto.responseDto.RegisterUserResponseDto;
 import com.gregad.accountingmanagement.dto.responseDto.UserInformationResponseDto;
+import com.gregad.accountingmanagement.dto.responseDto.ValidateTokenResponseDto;
 import com.gregad.accountingmanagement.security.jwt.JwtTokenProvider;
 import com.gregad.accountingmanagement.service.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,14 +78,14 @@ public class UserController {
     }
     
     @GetMapping(value = PREFIX+"/{token}"+VALIDATION)
-    void validateToken(@PathVariable String token,
-                             HttpServletResponse response){
+    ValidateTokenResponseDto validateToken(@PathVariable String token,
+                                           HttpServletResponse response){
         String resolvedToken=token.substring(7,token.length());
-        if (jwtTokenProvider.validateToken(resolvedToken)) {
-            String newToken=jwtTokenProvider.updateToken(resolvedToken);
-            response.addHeader(HEADER, BEARER+newToken);
-        }
-        return ;
+        jwtTokenProvider.validateToken(resolvedToken);
+        String newToken=jwtTokenProvider.updateToken(resolvedToken);
+        response.addHeader(HEADER, BEARER+newToken);
+       
+        return jwtTokenProvider.getUserData(newToken);
     }
     
 

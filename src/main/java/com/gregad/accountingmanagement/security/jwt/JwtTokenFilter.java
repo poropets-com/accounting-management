@@ -14,7 +14,7 @@ import java.io.IOException;
 
 // all new request if token expiration still valid we extend its validity
 public class JwtTokenFilter extends GenericFilterBean {
-   
+
     private JwtTokenProvider jwtTokenProvider;
     
     
@@ -24,13 +24,18 @@ public class JwtTokenFilter extends GenericFilterBean {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        String token=jwtTokenProvider.resolveToken((HttpServletRequest) servletRequest);
-        if (token!=null && jwtTokenProvider.validateToken(token)){
-            String newToken=jwtTokenProvider.updateToken(token);
-            jwtTokenProvider.updateHeaderResponse((HttpServletResponse) servletResponse,newToken);
-               Authentication authentication=jwtTokenProvider.getAuthentication(newToken);
-                if (authentication!=null){
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
+        StringBuffer requestURL = ((HttpServletRequest) servletRequest).getRequestURL();
+        String url=requestURL.substring(requestURL.length()-11,requestURL.length());
+
+        if (!url.equals("/validation")) {
+            String token=jwtTokenProvider.resolveToken((HttpServletRequest) servletRequest);
+            if (token!=null && jwtTokenProvider.validateToken(token)){
+                String newToken=jwtTokenProvider.updateToken(token);
+                jwtTokenProvider.updateHeaderResponse((HttpServletResponse) servletResponse,newToken);
+                   Authentication authentication=jwtTokenProvider.getAuthentication(newToken);
+                    if (authentication!=null){
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
             }
         }
         filterChain.doFilter(servletRequest,servletResponse);

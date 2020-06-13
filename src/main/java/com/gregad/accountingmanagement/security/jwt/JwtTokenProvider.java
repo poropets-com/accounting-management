@@ -1,5 +1,6 @@
 package com.gregad.accountingmanagement.security.jwt;
 
+import com.gregad.accountingmanagement.dto.responseDto.ValidateTokenResponseDto;
 import com.gregad.accountingmanagement.security.JwtUserDetailsService;
 import com.gregad.accountingmanagement.service.interfaces.IUserTokenService;
 import io.jsonwebtoken.*;
@@ -92,7 +93,7 @@ public class JwtTokenProvider {
             }
             
             if (claims.getBody().getExpiration().before(new Date())){
-                return false;
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN,"JWT token is expired or invalid");
             }
             return true;
         } catch (JwtException | IllegalArgumentException e) {
@@ -100,13 +101,24 @@ public class JwtTokenProvider {
         }
     }
     public String updateToken(String token){
-        List<String> roles= (List<String>) Jwts.parser().
+        List<String> roles= getRoles(token);
+        return createToken(getUserEmail(token),roles);
+    }
+
+    private List<String> getRoles(String token) {
+        return (List<String>) Jwts.parser().
                 setSigningKey(secret).
                 parseClaimsJws(token).
                 getBody().get("roles");
-        return createToken(getUserEmail(token),roles);
     }
+
     public void updateHeaderResponse(HttpServletResponse response, String newToken){
         response.addHeader(HEADER,PREFIX+newToken);
+    }
+    
+    public ValidateTokenResponseDto getUserData(String token){
+        String email=getUserEmail(token);
+        List<String> roles= getRoles(token);
+        return new ValidateTokenResponseDto(email,roles);
     }
 }
