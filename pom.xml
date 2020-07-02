@@ -16,7 +16,7 @@
 
 	<properties>
 		<java.version>1.8</java.version>
-		<mysql.connector.vertion>8.0.15</mysql.connector.vertion>
+		<mysql.connector.vertion>8.0.16</mysql.connector.vertion>
 		<jsonwebtoken.vertion>0.8.0</jsonwebtoken.vertion>
 		<spring-cloud.version>Hoxton.SR5</spring-cloud.version>
 	</properties>
